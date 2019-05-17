@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script>
+        var studentsArray = [];
+        
+        $(document).ready(function(){
+        $("#submit").attr("disabled", true);
+        $("#name") && $("#phone") && $("#email") && $("#password") .on("keyup", function(){
+        if($("#name").val !== "" && $("#phone").val !== "" && $("#email").val !== "" && $("#password").val !== ""){
+            $("#submit").attr("disabled", false);
+        }
+        else{
+            $("#submit").attr("disabled", true);
+        }
+        });
+        });
+        
+        function init() {
+            if (localStorage.studentsRecord) {
+                studentsArray = JSON.parse(localStorage.studentsRecord);
+                for (var i = 0; i < studentsArray.length; i++) {
+                    prepareTableCell(studentsArray[i].name, studentsArray[i].phone, studentsArray[i].email, studentsArray[i].password);
+                }
+            }
+        }
+        function timeSince(date) {
+
+            var seconds = Math.floor((new Date() - date) / 1000);
+
+            var interval = Math.floor(seconds / 31536000);
+
+            if (interval > 1) {
+                return interval + " years ago";
+            }
+            interval = Math.floor(seconds / 2592000);
+            if (interval > 1) {
+                return interval + " months ago";
+            }
+            interval = Math.floor(seconds / 86400);
+            if (interval > 1) {
+                return interval + " days ago";
+            }
+            interval = Math.floor(seconds / 3600);
+            if (interval > 1) {
+                return interval + " hours ago";
+            }
+            interval = Math.floor(seconds / 60);
+            if (interval > 1) {
+                return interval + " minutes ago";
+            }
+            return Math.floor(seconds) + " seconds ago";
+        }
+        
+        function onRegisterPressed() {
+            var name = document.getElementById("name").value;
+            var phone = document.getElementById("phone").value;
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+            var stuObj = { name: name, phone: phone, email: email, password: password };
+            studentsArray.push(stuObj);
+            localStorage.studentsRecord = JSON.stringify(studentsArray);
+            prepareTableCell(name, phone, email, password);
+            document.getElementById("name").value = "";
+            document.getElementById("phone").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("password").value = "";
+        }
+        function prepareTableCell(name, phone, email, password) {
+            var aDay = 24 * 60 * 60 * 1000
+            console.log(timeSince(new Date(Date.now() - aDay)));
+            console.log(timeSince(new Date(Date.now() - aDay * 2)));
+            var table = document.getElementById("regtable");
+            var row = table.insertRow();
+            var idcell = row.insertCell(0);
+            var namecell = row.insertCell(1);
+            var phonecell = row.insertCell(2);
+            var emailcell = row.insertCell(3);
+            var passwordcell = row.insertCell(4);
+            var timestamp = row.insertCell(5);
+            for (var i = 0; i < studentsArray.length; i++) {
+                idcell.innerHTML = i;
+                timestamp.innerHTML = timeSince(new Date(Date.now() - aDay));
+            }
+            namecell.innerHTML = name;
+            phonecell.innerHTML = phone;
+            emailcell.innerHTML = email;
+            passwordcell.innerHTML = password;
+
+
+        }
+        function switchVisible() {
+            if (document.getElementById('Div1')) {
+
+                if (document.getElementById('Div1').style.display == 'none') {
+                    document.getElementById('Div1').style.display = 'block';
+                    document.getElementById('Div2').style.display = 'none';
+                }
+                else {
+                    document.getElementById('Div1').style.display = 'none';
+                    document.getElementById('Div2').style.display = 'block';
+                }
+            }
+        }
+
+        function Warn() {
+            alert("successfully registered !");
+        }
+        
+    </script>
+
+    <style type="text/css">
+        #Div2 {
+            display: none;
+        }
+    </style>
+</head>
+
+<body onload="init()">
+
+    <div class="container" id="form-wrapper" style="max-width:500px;margin:auto;">
+        <div class="col-lg-12">
+            <div class="row">
+                <div>
+                    
+
+                        <header>
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <br>
+                                        <img src="landmark-group-squarelogo-1516176076365.png" class="img-circle"
+                                            alt="landmark-group-squarelogo" width="60" height="60">
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <h1>Landmark Group</h1>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </header>
+                        <form>
+                        <div id="Div1">
+                            <div class="form-group col-lg-8">
+                                <label for="name" class="control-label">Name</label>
+                                <input type="text" id="name" placeholder="Enter Name" class="form-control" required/>
+                            </div>
+                            <div class="form-group col-lg-8">
+                                <label for="phone" class="control-label">Phone</label>
+                                <input type="text" id="phone" placeholder="Enter Phone" class="form-control" required />
+                            </div>
+                            <div class="form-group col-lg-8">
+                                <label for="email" class="control-label">Email</label>
+                                <input type="email" id="email" placeholder="Enter Email" class="form-control" required />
+                            </div>
+                            <div class="form-group col-lg-8">
+                                <label for="password" class="control-label">Password</label>
+                                <input type="text" id="password" placeholder="Enter Password" class="form-control" required />
+                            </div>
+                            <div class="col-lg-12">
+                                <button onclick="onRegisterPressed(); Warn(); " type="button" id ="submit"
+                                    class="btn btn-success">Submit</button>
+                                &nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button onclick="switchVisible()" type="button" class="btn btn-info">View</button>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+                    <div id="Div2">
+                        <table id="regtable" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Password</th>
+                                    <th>Time</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                        <button onclick="switchVisible()" type="button" class="btn btn-warning">Form</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
